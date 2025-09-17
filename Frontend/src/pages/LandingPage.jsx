@@ -1,60 +1,54 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
-function LandingPage() {
+const LandingPage = () => {
+  const navigate = useNavigate();
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => setIsVisible(true), []);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-gray-900 to-black text-white p-8">
-      {/* Hero Section */}
-      <h1 className="text-5xl font-extrabold text-white drop-shadow-lg mb-12 text-center">
-        Welcome to VoteChain
-      </h1>
-      <p className="text-2xl text-white/80 mb-8 text-center">
-        A secure and transparent blockchain-based voting platform.
-      </p>
-      <div className="flex gap-8">
-        <Link
-          to="/signup"
-          className="relative group bg-white/20 backdrop-blur-md border border-white/30 rounded-xl p-8 text-center shadow-lg hover:scale-105 transition-transform duration-300 hover:bg-white/30 hover:border-white/50 cursor-pointer"
-        >
-          <h2 className="text-3xl font-bold text-white group-hover:text-blue-400 transition-colors duration-300">
-            Sign Up
-          </h2>
-          <p className="text-white/80 mt-2 group-hover:text-white transition-colors duration-300">
-            Create an account and get started with secure voting
-          </p>
-        </Link>
-
-        <Link
-          to="/login"
-          className="relative group bg-white/20 backdrop-blur-md border border-white/30 rounded-xl p-8 text-center shadow-lg hover:scale-105 transition-transform duration-300 hover:bg-white/30 hover:border-white/50 cursor-pointer"
-        >
-          <h2 className="text-3xl font-bold text-white group-hover:text-green-400 transition-colors duration-300">
-            Log In
-          </h2>
-          <p className="text-white/80 mt-2 group-hover:text-white transition-colors duration-300">
-            Already have an account? Log in to vote or manage results
-          </p>
-        </Link>
+ <div
+  className="relative min-h-screen flex flex-col items-center justify-center px-6 text-center text-white"
+  style={{
+    background: "linear-gradient(270deg, #1A2A80, #3B38A0, #7A85C1, #B2B0E8)",
+    backgroundSize: "800% 800%",
+    animation: "gradientMove 5s ease infinite",
+  }}
+    
+    >
+      {/* Animated Header */}
+      <div className={`transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-4">
+          Welcome to <span className="text-[#F6F7FB]">VoteChain</span>
+        </h1>
       </div>
 
-      
+      {/* Description */}
+      <div className={`transition-all duration-700 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+        <p className="max-w-2xl text-white/90 text-lg md:text-xl mb-8">
+          A simple, transparent voting app. Every vote becomes a block linked by
+          cryptographic hashes. Verify results in real-time and learn blockchain
+          concepts by doing.
+        </p>
+      </div>
+
+      {/* Button */}
+      <div className={`flex flex-col sm:flex-row gap-4 transition-all duration-700 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+        <button
+          onClick={() => navigate("/login")}
+          className="px-8 py-4 rounded-2xl bg-white text-[#1A2A80] font-medium shadow-lg hover:opacity-90 transition-all hover:scale-105"
+        >
+        Login
+        </button>
+      </div>
 
       {/* Footer */}
-      <footer className="mt-16 text-center text-white/70">
-        <p>© 2025 VoteChain. All rights reserved.</p>
-        <div className="flex justify-center mt-4 space-x-8">
-          <Link to="/privacy-policy" className="hover:underline">
-            Privacy Policy
-          </Link>
-          <Link to="/terms" className="hover:underline">
-            Terms of Service
-          </Link>
-          <Link to="/contact" className="hover:underline">
-            Contact Us
-          </Link>
-        </div>
+      <footer className="mt-16 text-white/80 text-sm">
+        <p>© {new Date().getFullYear()} VoteChain. All rights reserved.</p>
       </footer>
     </div>
   );
-}
+};
 
 export default LandingPage;

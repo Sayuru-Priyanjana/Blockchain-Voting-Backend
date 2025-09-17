@@ -49,7 +49,10 @@ const VotingSessions = () => {
           {sessions.map((session) => (
             <div
               key={session._id}
-              onClick={() => navigate(`/user/dashboard/${session._id}`)}
+              onClick={() => {
+                localStorage.setItem('selectedChainId', session._id);
+                navigate(`/user/dashboard/${session._id}`);
+              }}
               className="relative group bg-white/20 backdrop-blur-md border border-white/30 rounded-xl p-8 flex flex-col justify-between shadow-lg hover:scale-105 transition-transform duration-300 hover:bg-white/30 hover:border-white/50 cursor-pointer"
             >
               <h2 className="text-2xl font-bold text-yellow-400 group-hover:text-yellow-300">

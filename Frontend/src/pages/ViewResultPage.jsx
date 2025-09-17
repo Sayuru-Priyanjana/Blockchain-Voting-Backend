@@ -18,24 +18,38 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 const ViewResultPage = () => {
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(true);
-  const chainId = JSON.parse(localStorage.getItem("chainId")) || '68cab29d950ca6be885bd240';
+  
+   
 
   useEffect(() => {
-    const fetchResults = async () => {
-      try {
-        const res = await axios.get(
-          "http://localhost:5000/statistics/68cab29d950ca6be885bd240"
-        );
-        setResults(res.data);
-      } catch (err) {
-        console.error("Error fetching results:", err);
-      } finally {
+  const fetchResults = async () => {
+    try {
+      const chainID = localStorage.getItem("selectedChainId"); // no JSON.parse
+      if (!chainID) {
+        console.error("No chainID found in localStorage");
         setLoading(false);
+        return;
       }
-    };
 
-    fetchResults();
-  }, []);
+      console.log("Fetching results for chainID:", chainID);
+
+      const res = await axios.get(
+        `http://localhost:5000/statistics/${chainID}`
+      );
+
+      setResults(res.data);
+    } catch (err) {
+      console.error("Error fetching results:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchResults();
+}, []);
+
+
+
 
   if (loading) return <p className="text-white text-xl">Loading...</p>;
   if (!results) return <p className="text-white text-xl">No results found.</p>;

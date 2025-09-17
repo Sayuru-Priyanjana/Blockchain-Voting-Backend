@@ -8,6 +8,7 @@ const UserDashboard = () => {
   // Example static user data (later replace with real data)
 
  const storedUser = JSON.parse(localStorage.getItem("user")) || null;
+ localStorage.setItem("chainID", chainId);
 
   const user = {
     name: storedUser?.data?.data?.user?.name || "Guest",

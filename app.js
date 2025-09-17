@@ -2,6 +2,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const blockRoutes = require('./routes/blockRoutes');
 
+// const statisticsRoutes = require('./routes/statisticsRoutes');
+// app.use('/statistics', statisticsRoutes);
+
 const app = express();
 app.use(express.json());
 

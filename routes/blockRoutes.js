@@ -1,21 +1,74 @@
 // blockRoutes.js
 const express = require('express');
 const router = express.Router();
+const crypto = require('crypto');
+require('dotenv').config();
 const { createBlock, verifyChain, getBlocks } = require('../utility/blockUtils');
+const Block = require('../models/blockModel');
 
 // Cast a vote (create block)
+// router.post('/:chainId/vote', async (req, res) => {
+//   try {
+//     const { voterAnonId, candidate } = req.body;
+//     if (!voterAnonId || !candidate) return res.status(400).send('Missing vote data');
+
+//     const block = await createBlock(req.params.chainId, { voterAnonId, candidate });
+//     res.json(block);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).send('Error creating block');
+//   }
+// });
+
+// Cast a vote (create block)
+// router.post('/:chainId/vote', async (req, res) => {
+//   try {
+//     const { voterId, candidate } = req.body;
+//     const { chainId } = req.params;
+
+//     if (!voterId || !candidate) return res.status(400).send('Missing vote data');
+
+//     // Calculate anonymized voter ID
+//     const SERVER_SECRET = process.env.VOTER_SECRET;
+//     const voterAnonId = crypto.createHash('sha256').update(voterId + chainId + SERVER_SECRET).digest('hex');
+
+//     const block = await createBlock(chainId, { voterAnonId, candidate });
+//     res.json(block);
+
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).send('Error creating block');
+//   }
+// });
+
 router.post('/:chainId/vote', async (req, res) => {
   try {
-    const { voterAnonId, candidate } = req.body;
-    if (!voterAnonId || !candidate) return res.status(400).send('Missing vote data');
+    const { voterId, candidate } = req.body;
+    const { chainId } = req.params;
 
-    const block = await createBlock(req.params.chainId, { voterAnonId, candidate });
+    if (!voterId || !candidate) return res.status(400).send('Missing vote data');
+
+    // Calculate anonymized voter ID
+    const SERVER_SECRET = process.env.VOTER_SECRET;
+    const voterAnonId = crypto.createHash('sha256').update(voterId + chainId + SERVER_SECRET).digest('hex');
+
+    // Check if voter already voted in this chain
+    const alreadyVoted = await Block.findOne({ chainId, 'voteData.voterAnonId': voterAnonId });
+    if (alreadyVoted) {
+      return res.status(400).json({ message: 'You have already voted in this session.' });
+    }
+
+    // Create block
+    const block = await createBlock(chainId, { voterAnonId, candidate });
     res.json(block);
+
   } catch (err) {
     console.error(err);
     res.status(500).send('Error creating block');
   }
 });
+
+
 
 // Get all blocks for a chain
 router.get('/:chainId', async (req, res) => {
